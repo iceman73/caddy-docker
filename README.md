@@ -1,11 +1,13 @@
 # caddy
 
-A [Docker](https://docker.com) image for [Caddy](https://caddyserver.com). This image includes [git](https://caddyserver.com/docs/http.git), [filebrowser](https://caddyserver.com/docs/http.filebrowser), [cors](https://caddyserver.com/docs/http.cors), [realip](https://caddyserver.com/docs/http.realip), [expires](https://caddyserver.com/docs/http.expires) and [cache](https://caddyserver.com/docs/http.cache) plugins.
+A [Docker](https://docker.com) image for [Caddy](https://caddyserver.com). This image includes [git](https://caddyserver.com/docs/http.git), [filebrowser](https://caddyserver.com/docs/http.filebrowser), [cors](https://caddyserver.com/docs/http.cors), [realip](https://caddyserver.com/docs/http.realip), [expires](https://caddyserver.com/docs/http.expires), [cache](https://caddyserver.com/docs/http.cache) and [DNS Cloudflare](https://caddyserver.com/docs/tls.dns.cloudflare) plugins.
+
+I built this image as the builder image didnt always work from ABisoft, so I made a new image for myself and others to easily deploy a docker with cloudflare DNS integration.
 
 Plugins can be configured via the [`plugins` build arg](#custom-plugins).
 
 [![](https://images.microbadger.com/badges/image/abiosoft/caddy.svg)](https://microbadger.com/images/abiosoft/caddy "Get your own image badge on microbadger.com")
-[![](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/mholt/caddy/tree/v1.0.0)
+[![](https://img.shields.io/badge/version-0.11.5-blue.svg)](https://github.com/mholt/caddy/tree/v0.11.5)
 
 Check [abiosoft/caddy:builder](https://github.com/abiosoft/caddy-docker/blob/master/BUILDER.md) for generating cross-platform Caddy binaries.
 
@@ -24,7 +26,7 @@ Starting from `v0.11.0`, [Telemetry stats](https://caddyserver.com/docs/telemetr
 ## Getting Started
 
 ```sh
-$ docker run -d -p 2015:2015 abiosoft/caddy
+$ docker run -d -p 2015:2015 icebuild/caddy_w_clouflare
 ```
 
 Point your browser to `http://127.0.0.1:2015`.
@@ -41,7 +43,7 @@ $ docker run -d \
     -v $(pwd)/Caddyfile:/etc/Caddyfile \
     -v $HOME/.caddy:/root/.caddy \
     -p 80:80 -p 443:443 \
-    abiosoft/caddy
+    icebuild/caddy_w_clouflare
 ```
 
 Here, `/root/.caddy` is the location _inside_ the container where caddy will save certificates.
@@ -53,7 +55,7 @@ $ docker run -d \
     -e "CADDYPATH=/etc/caddycerts" \
     -v $HOME/.caddy:/etc/caddycerts \
     -p 80:80 -p 443:443 \
-    abiosoft/caddy
+    icebuild/caddy_w_clouflare
 ```
 
 Above, we utilize the `CADDYPATH` environment variable to define a different location inside the container for
@@ -64,7 +66,7 @@ certificates to be stored. This is probably the safest option as it ensures any 
 `:[<version>-]php` variant of this image bundles PHP-FPM alongside essential php extensions and [composer](https://getcomposer.org). e.g. `:php`, `:0.10.14-php`
 
 ```sh
-$ docker run -d -p 2015:2015 abiosoft/caddy:php
+$ docker run -d -p 2015:2015 icebuild/caddy_w_clouflare
 ```
 
 Point your browser to `http://127.0.0.1:2015` and you will see a php info page.
@@ -74,7 +76,7 @@ Point your browser to `http://127.0.0.1:2015` and you will see a php info page.
 Replace `/path/to/php/src` with your php sources directory.
 
 ```sh
-$ docker run -d -v /path/to/php/src:/srv -p 2015:2015 abiosoft/caddy:php
+$ docker run -d -v /path/to/php/src:/srv -p 2015:2015 icebuild/caddy_w_clouflare
 ```
 
 Point your browser to `http://127.0.0.1:2015`.
@@ -98,7 +100,7 @@ $ printf "0.0.0.0\nroot src\ngit github.com/abiosoft/webtest" > Caddyfile
 ##### Run the image
 
 ```sh
-$ docker run -d -v $(pwd)/Caddyfile:/etc/Caddyfile -p 2015:2015 abiosoft/caddy
+$ docker run -d -v $(pwd)/Caddyfile:/etc/Caddyfile -p 2015:2015 icebuild/caddy_w_clouflare
 ```
 
 Point your browser to `http://127.0.0.1:2015`.
@@ -143,7 +145,7 @@ $ docker run -d \
     -v /path/to/sites/root:/srv \
     -v path/to/Caddyfile:/etc/Caddyfile \
     -p 2015:2015 \
-    abiosoft/caddy
+    icebuild/caddy_w_clouflare
 ```
 
 ### Let's Encrypt Auto SSL
@@ -166,5 +168,5 @@ You can change the the ports if ports 80 and 443 are not available on host. e.g.
 $ docker run -d \
     -v $(pwd)/Caddyfile:/etc/Caddyfile \
     -p 80:80 -p 443:443 \
-    abiosoft/caddy
+    icebuild/caddy_w_clouflare
 ```
